@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'Pegawai.apps.PegawaiConfig',
     'Customer.apps.CustomerConfig',
+    'Supplier.apps.SupplierConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

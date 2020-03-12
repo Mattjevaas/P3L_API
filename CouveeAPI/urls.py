@@ -18,9 +18,11 @@ from django.urls import path, include
 from MyApi.views import MyApi
 from Pegawai.views import Pegawai
 from Customer.views import Customer
+from Supplier.views import Supplier
 
 urlpatterns = [
     path('',MyApi.as_view()),
     path('pegawai/',Pegawai.as_view()),
-    path('customer/',Customer.as_view())
+    path('customer/',Customer.as_view()),
+    path('supplier/',Supplier.as_view())
 ]
