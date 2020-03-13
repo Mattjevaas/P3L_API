@@ -19,10 +19,16 @@ from MyApi.views import MyApi
 from Pegawai.views import Pegawai
 from Customer.views import Customer
 from Supplier.views import Supplier
+from Hewan.views import Hewan
+from JenisHewan.views import JenisHewan
+from UkuranHewan.views import UkuranHewan
 
 urlpatterns = [
     path('',MyApi.as_view()),
     path('pegawai/',Pegawai.as_view()),
     path('customer/',Customer.as_view()),
-    path('supplier/',Supplier.as_view())
+    path('supplier/',Supplier.as_view()),
+    path('hewan/',Hewan.as_view()),
+    path('jenis-hewan/',JenisHewan.as_view()),
+    path('ukuran-hewan/',UkuranHewan.as_view()),
 ]
