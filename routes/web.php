@@ -33,5 +33,8 @@ $router->group(['prefix' => 'pegawai'], function () use ($router) {
 
 $router->group(['prefix' => 'customer'], function() use ($router) {
     $router->get('/','CustomerController@fetch_all');
-
+    $router->get('/{id}','CustomerController@get_specify');
+    $router->delete('/{id}','CustomerController@delete_specify');
+    $router->post('/store','CustomerController@store');
+    $router->post('/edit/{id}','CustomerController@edit_specify');
 });

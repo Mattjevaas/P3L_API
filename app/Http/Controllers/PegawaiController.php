@@ -34,7 +34,7 @@ class PegawaiController extends Controller
 
         if($result)
         {
-            return response()->json(['Status' => 'Sucess', 'Data' => $results],200);
+            return response()->json(['Status' => 'Sucess', 'Data' => $result],200);
         }
         else
         {
