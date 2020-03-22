@@ -38,3 +38,11 @@ $router->group(['prefix' => 'customer'], function() use ($router) {
     $router->post('/store','CustomerController@store');
     $router->post('/edit/{id}','CustomerController@edit_specify');
 });
+
+$router->group(['prefix' => 'supplier'], function() use ($router) {
+    $router->get('/','SupplierController@fetch_all');
+    $router->get('/{id}','SupplierController@get_specify');
+    $router->delete('/{id}','SupplierController@delete_specify');
+    $router->post('/store','SupplierController@store');
+    $router->post('/edit/{id}','SupplierController@edit_specify');
+});
