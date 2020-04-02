@@ -36,7 +36,7 @@ class LoginController extends Controller
 
         if (! $token = Auth::attempt($credentials)) 
         {
-            return response()->json(['Status' => $credentials, 'Token' => 'N/A'],401);
+            return response()->json(['Status' => 'Failed', 'Token' => 'N/A'],401);
         }
 
         return $this->respondWithToken($token);

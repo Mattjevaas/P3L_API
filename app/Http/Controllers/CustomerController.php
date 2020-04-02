@@ -24,7 +24,7 @@ class CustomerController extends Controller
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed', 'Data' => []],500);
         }
     }
 
@@ -34,11 +34,11 @@ class CustomerController extends Controller
 
         if($result)
         {
-            return response()->json(['Status' => 'Sucess', 'Data' => $result],200);
+            return response()->json(['Status' => 'Success', 'Data' => $result],200);
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed', 'Data' => []],500);
         }
     }
 
@@ -56,13 +56,13 @@ class CustomerController extends Controller
             $result2 = Customer::where('idCustomer_Member',$id)->delete();
 
             if($result2)
-                return response()->json(['Status' => 'Sucess'],200);
+                return response()->json(['Status' => 'Success', 'Data' => []],200);
             else
-                return response()->json(['Status' => 'Failed'],500);
+                return response()->json(['Status' => 'Failed', 'Data' => []],500);
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed', 'Data' => []],500);
         }
     }
 
@@ -91,11 +91,11 @@ class CustomerController extends Controller
 
         if($customer->save())
         {
-            return response()->json(['Status' => 'Sucess'],200);
+            return response()->json(['Status' => 'Success', 'Data' => []],200);
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed','Data' => []],500);
         }
     }
 
@@ -122,11 +122,11 @@ class CustomerController extends Controller
 
         if($customer->save())
         {
-            return response()->json(['Status' => 'Sucess'],200);
+            return response()->json(['Status' => 'Success', 'Data' => []],200);
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed', 'Data' => []],500);
         }
     }
 
