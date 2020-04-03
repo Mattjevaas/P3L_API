@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Customer;
 
@@ -12,6 +13,11 @@ class CustomerController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function profile()
+    {
+        return response()->json(['user' => Auth::user()], 200);
     }
 
     public function fetch_all(Request $request)
@@ -46,11 +52,12 @@ class CustomerController extends Controller
     {
         $result = Customer::where('idCustomer_Member',$id)->first();
 
-        if($result)
+        if($result) 
         {
 
             //ini perlu diganti
-            $result->edited_by = 2;
+            $user = Auth::user();   
+            $result->edited_by = $user['idPegawai'];
             $result->save();
 
             $result2 = Customer::where('idCustomer_Member',$id)->delete();
@@ -87,7 +94,8 @@ class CustomerController extends Controller
         $customer->email = $request->input('email');
 
         //ini perlu diubah
-        $customer->edited_by = 2;
+        $user = Auth::user();   
+        $result->edited_by = $user['idPegawai'];
 
         if($customer->save())
         {
@@ -118,7 +126,8 @@ class CustomerController extends Controller
         $customer->email = $request->input('email');
 
         //ini perlu diubah
-        $customer->edited_by = 2;
+        $user = Auth::user();   
+        $result->edited_by = $user['idPegawai'];
 
         if($customer->save())
         {

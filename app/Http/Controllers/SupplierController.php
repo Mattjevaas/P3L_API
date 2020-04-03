@@ -48,7 +48,8 @@ class SupplierController extends Controller
         {
 
             //ini perlu diganti
-            $result->edited_by = 1;
+            $user = Auth::user();
+            $result->edited_by = $user['idPegawai'];
             $result->save();
 
             $result2 = Supplier::where('idSupplier',$id)->delete();
@@ -83,7 +84,8 @@ class SupplierController extends Controller
         $supplier->email = $request->input('email');
 
         //ini perlu diubah
-        $supplier->edited_by = 1;
+        $user = Auth::user();
+        $supplier->edited_by = $user['idPegawai'];
 
         if($supplier->save())
         {
@@ -112,7 +114,8 @@ class SupplierController extends Controller
         $supplier->email = $request->input('email');
 
         //ini perlu diubah
-        $supplier->edited_by = 1;
+        $user = Auth::user();
+        $supplier->edited_by = $user['idPegawai'];
 
         if($supplier->save())
         {

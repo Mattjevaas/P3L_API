@@ -50,7 +50,8 @@ class PegawaiController extends Controller
         {
 
             //ini perlu diganti
-            $result->edited_by = 1;
+            $user = Auth::user();
+            $result->edited_by = $user['idPegawai'];
             $result->save();
 
             $result2 = Pegawai::where('idPegawai',$id)->delete();
@@ -91,7 +92,8 @@ class PegawaiController extends Controller
         $pegawai->password = app('hash')->make($request->input('password'));
 
         //ini perlu diubah
-        $pegawai->edited_by = 1;
+        $user = Auth::user();
+        $pegawai->edited_by = $user['idPegawai'];
 
         if($pegawai->save())
         {
@@ -124,7 +126,8 @@ class PegawaiController extends Controller
         $pegawai->email = $request->input('email');
 
         //ini perlu diubah
-        $pegawai->edited_by = 1;
+        $user = Auth::user();
+        $pegawai->edited_by = $user['idPegawai'];
 
         if($pegawai->save())
         {
