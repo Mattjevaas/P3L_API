@@ -24,7 +24,7 @@ class SupplierController extends Controller
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed','Data' => []],500);
         }
     }
 
@@ -38,7 +38,7 @@ class SupplierController extends Controller
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed','Data' => []],500);
         }
     }
 
@@ -57,13 +57,13 @@ class SupplierController extends Controller
             $result2 = Supplier::where('idSupplier',$id)->delete();
 
             if($result2)
-                return response()->json(['Status' => 'Sucess'],200);
+                return response()->json(['Status' => 'Sucess','Data' => []],200);
             else
-                return response()->json(['Status' => 'Failed'],500);
+                return response()->json(['Status' => 'Failed','Data' => []],500);
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed','Data' => []],500);
         }
     }
 
@@ -91,11 +91,11 @@ class SupplierController extends Controller
 
         if($supplier->save())
         {
-            return response()->json(['Status' => 'Sucess'],200);
+            return response()->json(['Status' => 'Sucess','Data' => []],200);
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed','Data' => []],500);
         }
     }
 
@@ -121,11 +121,11 @@ class SupplierController extends Controller
 
         if($supplier->save())
         {
-            return response()->json(['Status' => 'Sucess'],200);
+            return response()->json(['Status' => 'Sucess','Data' => []],200);
         }
         else
         {
-            return response()->json(['Status' => 'Failed'],500);
+            return response()->json(['Status' => 'Failed','Data' => []],500);
         }
     }
 }
