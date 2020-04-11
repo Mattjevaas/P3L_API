@@ -46,3 +46,21 @@ $router->group(['prefix' => 'supplier'], function() use ($router) {
     $router->post('/store','SupplierController@store');
     $router->post('/edit/{id}','SupplierController@edit_specify');
 });
+
+$router->group(['prefix' => 'hewan'], function() use ($router) {
+    $router->get('/','HewanController@fetch_all');
+    $router->post('/store','HewanController@store');
+    $router->delete('/{id}','HewanController@delete_specify');
+});
+
+$router->group(['prefix' => 'ukuran_hewan'], function() use ($router) {
+    $router->get('/','Ukuran_hewanController@fetch_all');
+    $router->post('/store','Ukuran_hewanController@store');
+    $router->delete('/{id}','Ukuran_hewanController@delete_specify');
+});
+
+$router->group(['prefix' => 'jenis_hewan'], function() use ($router) {
+    $router->get('/','Jenis_hewanController@fetch_all');
+    $router->post('/store','Jenis_hewanController@store');
+    $router->delete('/{id}','Jenis_hewanController@delete_specify');
+});

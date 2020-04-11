@@ -15,11 +15,6 @@ class CustomerController extends Controller
         $this->middleware('auth');
     }
 
-    public function profile()
-    {
-        return response()->json(['user' => Auth::user()], 200);
-    }
-
     public function fetch_all(Request $request)
     {
         $results = Customer::all();
