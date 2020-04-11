@@ -83,7 +83,7 @@ class CustomerController extends Controller
             'tglLahir' => 'required',
             'noTelp' => 'required|string'
         ]);
-
+        
         $customer = new Customer;
         //$password = Crypt::encrypt($request->input('password'));
 
@@ -95,7 +95,7 @@ class CustomerController extends Controller
 
         //ini perlu diubah
         $user = Auth::user();   
-        $result->edited_by = $user['idPegawai'];
+        $customer->edited_by = $user['idPegawai'];
 
         if($customer->save())
         {
@@ -127,7 +127,7 @@ class CustomerController extends Controller
 
         //ini perlu diubah
         $user = Auth::user();   
-        $result->edited_by = $user['idPegawai'];
+        $customer->edited_by = $user['idPegawai'];
 
         if($customer->save())
         {
