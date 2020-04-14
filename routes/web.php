@@ -64,3 +64,21 @@ $router->group(['prefix' => 'jenis_hewan'], function() use ($router) {
     $router->post('/store','Jenis_hewanController@store');
     $router->delete('/{id}','Jenis_hewanController@delete_specify');
 });
+
+$router->group(['prefix' => 'barang'], function() use ($router) {
+    $router->get('/','ProdukBarangController@fetch_all');
+    $router->post('/store','ProdukBarangController@store');
+    $router->delete('/{id}','ProdukBarangController@delete_specify');
+});
+
+$router->group(['prefix' => 'layanan'], function() use ($router) {
+    $router->get('/','ProdukLayananController@fetch_all');
+    $router->post('/store','ProdukLayananController@store');
+    $router->delete('/{id}','ProdukLayananController@delete_specify');
+});
+
+$router->group(['prefix' => 'hargalayanan'], function() use ($router) {
+    $router->get('/','HargaLayananController@fetch_all');
+    $router->post('/store','HargaLayananController@store');
+    $router->delete('/{id}','HargaLayananController@delete_specify');
+});
