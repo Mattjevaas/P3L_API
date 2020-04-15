@@ -82,3 +82,15 @@ $router->group(['prefix' => 'hargalayanan'], function() use ($router) {
     $router->post('/store','HargaLayananController@store');
     $router->delete('/{id}','HargaLayananController@delete_specify');
 });
+
+$router->group(['prefix' => 'pengadaanbarang'], function() use ($router) {
+    $router->get('/','PengadaanBarangController@fetch_all');
+    $router->post('/store','PengadaanBarangController@store');
+    $router->delete('/{id}','PengadaanBarangController@delete_specify');
+});
+
+$router->group(['prefix' => 'rincianpengadaan'], function() use ($router) {
+    $router->get('/','RincianPengadaanController@fetch_all');
+    $router->post('/store','RincianPengadaanController@store');
+    $router->delete('/{id}','RincianPengadaanController@delete_specify');
+});
