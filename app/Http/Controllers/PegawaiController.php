@@ -18,6 +18,17 @@ class PegawaiController extends Controller
     {
         $results = Pegawai::all();
 
+        $i = 0;
+        foreach ($results as $data)
+        {
+
+            $pegawai = Pegawai::where('idPegawai',$results[$i]['edited_by'])->first();
+
+            $results[$i]['edited_by'] = $pegawai['namaPegawai'];
+
+            $i++;
+        }
+
         if($results)
         {
             return response()->json(['Status' => 'Sucess', 'Data' => $results],200);

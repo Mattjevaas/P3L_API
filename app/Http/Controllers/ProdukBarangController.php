@@ -6,17 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\ProdukBarang;
+use App\Pegawai;
 
 class ProdukBarangController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function fetch_all(Request $request)
     {
         $results = ProdukBarang::all();
+
+        $i = 0;
+        foreach ($results as $data)
+        {
+
+            $pegawai = Pegawai::where('idPegawai',$results[$i]['edited_by'])->first();
+
+            $results[$i]['edited_by'] = $pegawai['namaPegawai'];
+
+            $i++;
+        }
 
         if($results)
         {
@@ -32,11 +44,11 @@ class ProdukBarangController extends Controller
     {
         $result = ProdukBarang::where('idProduk',$id)->first();
 
-        if($result) 
+        if($result)
         {
 
             //ini perlu diganti
-            $user = Auth::user();   
+            $user = Auth::user();
             $result->edited_by = $user['idPegawai'];
             $result->save();
 
@@ -53,7 +65,7 @@ class ProdukBarangController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function edit_specify(Request $request,$id)
     {
 
         $this->validate($request, [
@@ -65,8 +77,8 @@ class ProdukBarangController extends Controller
             'stokMinimal' => 'required',
             'productPic' => 'required|mimes:jpeg,jpg,png'
         ]);
-        
-        $barang = new ProdukBarang;
+
+        $barang = ProdukBarang::where('idProduk',$id)->first();
         //$password = Crypt::encrypt($request->input('password'));
 
         $barang->namaProduk = $request->input('namaProduk');
@@ -75,7 +87,7 @@ class ProdukBarangController extends Controller
         $barang->hargaJual = $request->input('hargaJual');
         $barang->hargaBeli = $request->input('hargaBeli');
         $barang->stokMinimal = $request->input('stokMinimal');
-           
+
         //uploads process
         $picName = $request->file('productPic')->getClientOriginalName();
         $basePath = getcwd();
@@ -83,13 +95,13 @@ class ProdukBarangController extends Controller
         $barang->linkGambar = $picName;
 
         //ini perlu diubah
-        $user = Auth::user();   
+        $user = Auth::user();
         $barang->edited_by = $user['idPegawai'];
-        
+
         if($barang->save() && $request->file('productPic')->move(storage_path($destinationPath),$picName))
         {
             return response()->json(['Status' => 'Success', 'Data' => []] ,200);
-        } 
+        }
         else
         {
             return response()->json(['Status' => 'Failed','Data' => []],500);

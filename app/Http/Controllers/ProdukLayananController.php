@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\ProdukLayanan;
+use App\Pegawai;
 
 class ProdukLayananController extends Controller
 {
@@ -32,10 +33,10 @@ class ProdukLayananController extends Controller
     {
         $result = ProdukLayanan::where('idLayanan',$id)->first();
 
-        if($result) 
+        if($result)
         {
             //ini perlu diganti
-            $user = Auth::user();   
+            $user = Auth::user();
             $result->edited_by = $user['idPegawai'];
             $result->save();
 
@@ -58,15 +59,42 @@ class ProdukLayananController extends Controller
         $this->validate($request, [
             'namaLayanan' => 'required|string',
         ]);
-        
+
         $layanan = new ProdukLayanan;
         //$password = Crypt::encrypt($request->input('password'));
 
         $layanan->namaLayanan = $request->input('namaLayanan');
-        
+
 
         //ini perlu diubah
-        $user = Auth::user();   
+        $user = Auth::user();
+        $layanan->edited_by = $user['idPegawai'];
+
+        if($layanan->save())
+        {
+            return response()->json(['Status' => 'Success', 'Data' => []],200);
+        }
+        else
+        {
+            return response()->json(['Status' => 'Failed','Data' => []],500);
+        }
+    }
+
+    public function edit_specify(Request $request,$id)
+    {
+
+        $this->validate($request, [
+            'namaLayanan' => 'required|string',
+        ]);
+
+        $layanan = ProdukLayanan::where('idLayanan',$id)->first();
+        //$password = Crypt::encrypt($request->input('password'));
+
+        $layanan->namaLayanan = $request->input('namaLayanan');
+
+
+        //ini perlu diubah
+        $user = Auth::user();
         $layanan->edited_by = $user['idPegawai'];
 
         if($layanan->save())

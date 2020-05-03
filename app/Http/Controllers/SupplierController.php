@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Supplier;
+use App\Pegawai;
 
 class SupplierController extends Controller
 {
@@ -17,6 +18,17 @@ class SupplierController extends Controller
     public function fetch_all(Request $request)
     {
         $results = Supplier::all();
+
+        $i = 0;
+        foreach ($results as $data)
+        {
+
+            $pegawai = Pegawai::where('idPegawai',$results[$i]['edited_by'])->first();
+
+            $results[$i]['edited_by'] = $pegawai['namaPegawai'];
+
+            $i++;
+        }
 
         if($results)
         {
@@ -34,7 +46,7 @@ class SupplierController extends Controller
 
         if($result)
         {
-            return response()->json(['Status' => 'Sucess', 'Data' => $result],200);
+            return response()->json(['Status' => 'Success', 'Data' => $result],200);
         }
         else
         {
@@ -57,7 +69,7 @@ class SupplierController extends Controller
             $result2 = Supplier::where('idSupplier',$id)->delete();
 
             if($result2)
-                return response()->json(['Status' => 'Sucess','Data' => []],200);
+                return response()->json(['Status' => 'Success','Data' => []],200);
             else
                 return response()->json(['Status' => 'Failed','Data' => []],500);
         }
@@ -91,7 +103,7 @@ class SupplierController extends Controller
 
         if($supplier->save())
         {
-            return response()->json(['Status' => 'Sucess','Data' => []],200);
+            return response()->json(['Status' => 'Success','Data' => []],200);
         }
         else
         {
@@ -121,7 +133,7 @@ class SupplierController extends Controller
 
         if($supplier->save())
         {
-            return response()->json(['Status' => 'Sucess','Data' => []],200);
+            return response()->json(['Status' => 'Success','Data' => []],200);
         }
         else
         {

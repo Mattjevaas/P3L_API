@@ -9,6 +9,7 @@ use App\Hewan;
 use App\Customer;
 use App\Jenis_hewan;
 use App\Ukuran_hewan;
+use App\Pegawai;
 
 class HewanController extends Controller
 {
@@ -20,19 +21,21 @@ class HewanController extends Controller
     public function fetch_all(Request $request)
     {
         $results = Hewan::all();
-        
+
         $i = 0;
         foreach ($results as $data)
         {
             $customer = Customer::where('idCustomer_Member',$results[$i]['idCustomer_Member'])->first();
             $jenis_hewan = Jenis_hewan::where('idJenisHewan',$results[$i]['idJenisHewan'])->first();
             $ukuran_hewan = Ukuran_hewan::where('idUkuranHewan',$results[$i]['idUkuranHewan'])->first();
+            $pegawai = Pegawai::where('idPegawai',$results[$i]['edited_by'])->first();
 
             if($customer && $jenis_hewan && $ukuran_hewan)
             {
                 $results[$i]['idCustomer_Member'] =  $customer;
                 $results[$i]['idJenisHewan'] = $jenis_hewan;
                 $results[$i]['idUkuranHewan'] = $ukuran_hewan;
+                $results[$i]['edited_by'] = $pegawai['namaPegawai'];
             }
             else
             {
@@ -57,11 +60,11 @@ class HewanController extends Controller
     {
         $result = Hewan::where('idHewan',$id)->first();
 
-        if($result) 
+        if($result)
         {
 
             //ini perlu diganti
-            $user = Auth::user();   
+            $user = Auth::user();
             $result->edited_by = $user['idPegawai'];
             $result->save();
 
@@ -88,7 +91,7 @@ class HewanController extends Controller
             'idJenisHewan' => 'required',
             'idCustomer_Member' => 'required'
         ]);
-        
+
         $hewan = new Hewan;
         //$password = Crypt::encrypt($request->input('password'));
 
@@ -99,7 +102,40 @@ class HewanController extends Controller
         $hewan->idCustomer_Member = $request->input('idCustomer_Member');
 
         //ini perlu diubah
-        $user = Auth::user();   
+        $user = Auth::user();
+        $hewan->edited_by = $user['idPegawai'];
+
+        if($hewan->save())
+        {
+            return response()->json(['Status' => 'Success', 'Data' => []],200);
+        }
+        else
+        {
+            return response()->json(['Status' => 'Failed','Data' => []],500);
+        }
+    }
+
+    public function edit_specify(Request $request,$id)
+    {
+        $this->validate($request, [
+            'namaHewan' => 'required|string',
+            'tglLahir' => 'required',
+            'idUkuranHewan' => 'required',
+            'idJenisHewan' => 'required',
+            'idCustomer_Member' => 'required'
+        ]);
+
+        $hewan = Hewan::where('idHewan',$id)->first();
+        //$password = Crypt::encrypt($request->input('password'));
+
+        $hewan->namaHewan = $request->input('namaHewan');
+        $hewan->tglLahir = $request->input('tglLahir');
+        $hewan->idUkuranHewan = $request->input('idUkuranHewan');
+        $hewan->idJenisHewan = $request->input('idJenisHewan');
+        $hewan->idCustomer_Member = $request->input('idCustomer_Member');
+
+        //ini perlu diubah
+        $user = Auth::user();
         $hewan->edited_by = $user['idPegawai'];
 
         if($hewan->save())

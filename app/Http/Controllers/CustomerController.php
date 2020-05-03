@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Customer;
+use App\Pegawai;
 
 class CustomerController extends Controller
 {
@@ -18,6 +19,17 @@ class CustomerController extends Controller
     public function fetch_all(Request $request)
     {
         $results = Customer::all();
+
+        $i = 0;
+        foreach ($results as $data)
+        {
+
+            $pegawai = Pegawai::where('idPegawai',$results[$i]['edited_by'])->first();
+
+            $results[$i]['edited_by'] = $pegawai['namaPegawai'];
+
+            $i++;
+        }
 
         if($results)
         {
@@ -47,11 +59,11 @@ class CustomerController extends Controller
     {
         $result = Customer::where('idCustomer_Member',$id)->first();
 
-        if($result) 
+        if($result)
         {
 
             //ini perlu diganti
-            $user = Auth::user();   
+            $user = Auth::user();
             $result->edited_by = $user['idPegawai'];
             $result->save();
 
@@ -78,7 +90,7 @@ class CustomerController extends Controller
             'tglLahir' => 'required',
             'noTelp' => 'required|string'
         ]);
-        
+
         $customer = new Customer;
         //$password = Crypt::encrypt($request->input('password'));
 
@@ -89,7 +101,7 @@ class CustomerController extends Controller
         $customer->email = $request->input('email');
 
         //ini perlu diubah
-        $user = Auth::user();   
+        $user = Auth::user();
         $customer->edited_by = $user['idPegawai'];
 
         if($customer->save())
@@ -104,6 +116,7 @@ class CustomerController extends Controller
 
     public function edit_specify(Request $request,$id)
     {
+
         $this->validate($request, [
             'email' => 'required|string',
             'namaCustomer' => 'required|string',
@@ -121,7 +134,7 @@ class CustomerController extends Controller
         $customer->email = $request->input('email');
 
         //ini perlu diubah
-        $user = Auth::user();   
+        $user = Auth::user();
         $customer->edited_by = $user['idPegawai'];
 
         if($customer->save())
@@ -134,5 +147,5 @@ class CustomerController extends Controller
         }
     }
 
-    
+
 }

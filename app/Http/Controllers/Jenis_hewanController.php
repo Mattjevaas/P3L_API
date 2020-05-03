@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Jenis_hewan;
+use App\Pegawai;
 
 class Jenis_hewanController extends Controller
 {
@@ -17,6 +18,17 @@ class Jenis_hewanController extends Controller
     public function fetch_all(Request $request)
     {
         $results = Jenis_hewan::all();
+
+        $i = 0;
+        foreach ($results as $data)
+        {
+
+            $pegawai = Pegawai::where('idPegawai',$results[$i]['edited_by'])->first();
+
+            $results[$i]['edited_by'] = $pegawai['namaPegawai'];
+
+            $i++;
+        }
 
         if($results)
         {
@@ -32,11 +44,11 @@ class Jenis_hewanController extends Controller
     {
         $result = Jenis_hewan::where('idJenisHewan',$id)->first();
 
-        if($result) 
+        if($result)
         {
 
             //ini perlu diganti
-            $user = Auth::user();   
+            $user = Auth::user();
             $result->edited_by = $user['idPegawai'];
             $result->save();
 
@@ -59,14 +71,40 @@ class Jenis_hewanController extends Controller
         $this->validate($request, [
             'jenisHewan' => 'required|string',
         ]);
-        
+
         $jenis = new Jenis_hewan;
         //$password = Crypt::encrypt($request->input('password'));
 
         $jenis->jenisHewan = $request->input('jenisHewan');
 
         //ini perlu diubah
-        $user = Auth::user();   
+        $user = Auth::user();
+        $jenis->edited_by = $user['idPegawai'];
+
+        if($jenis->save())
+        {
+            return response()->json(['Status' => 'Success', 'Data' => []],200);
+        }
+        else
+        {
+            return response()->json(['Status' => 'Failed','Data' => []],500);
+        }
+    }
+
+    public function edit_specify(Request $request,$id)
+    {
+
+        $this->validate($request, [
+            'jenisHewan' => 'required|string',
+        ]);
+
+        $jenis = Jenis_hewan::where('idJenisHewan',$id)->first();
+        //$password = Crypt::encrypt($request->input('password'));
+
+        $jenis->jenisHewan = $request->input('jenisHewan');
+
+        //ini perlu diubah
+        $user = Auth::user();
         $jenis->edited_by = $user['idPegawai'];
 
         if($jenis->save())
