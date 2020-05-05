@@ -39,9 +39,9 @@ class PengadaanBarangController extends Controller
                 //pegawai null hewan auto hapus
                 $results[$i] = null;
             }
-            
+
             if($product)
-            {   
+            {
                 $z=0;
 
                 foreach ($product as $data2)
@@ -90,7 +90,7 @@ class PengadaanBarangController extends Controller
     {
         $result = PengadaanBarang::where('idPengadaanBarang',$id)->first();
 
-        if($result) 
+        if($result)
         {
             $result2 = PengadaanBarang::where('idPengadaanBarang',$id)->delete();
 
@@ -112,7 +112,7 @@ class PengadaanBarangController extends Controller
             'namaPengadaan' => 'required|string',
             'idSupplier' => 'required',
         ]);
-        
+
         $pengadaan = new PengadaanBarang;
         //$password = Crypt::encrypt($request->input('password'));
 
@@ -121,10 +121,81 @@ class PengadaanBarangController extends Controller
         $pengadaan->statusCetak = "Belum Cetak";
         $pengadaan->idSupplier = $request->input('idSupplier');
         $pengadaan->total = 0;
-        
+
         //ini perlu diubah
-        $user = Auth::user();   
+        $user = Auth::user();
         $pengadaan->idPegawai = $user['idPegawai'];
+
+        if($pengadaan->save())
+        {
+            return response()->json(['Status' => 'Success', 'Data' => []],200);
+        }
+        else
+        {
+            return response()->json(['Status' => 'Failed','Data' => []],500);
+        }
+    }
+
+    public function edit_specify(Request $request,$id)
+    {
+
+        $this->validate($request, [
+            'namaPengadaan' => 'required|string',
+            'idSupplier' => 'required',
+        ]);
+
+        $pengadaan = PengadaanBarang::where('idPengadaanBarang',$id)->first();
+        //$password = Crypt::encrypt($request->input('password'));
+
+        $pengadaan->namaPengadaan = $request->input('namaPengadaan');
+        $pengadaan->idSupplier = $request->input('idSupplier');
+
+        //ini perlu diubah
+        $user = Auth::user();
+        $pengadaan->idPegawai = $user['idPegawai'];
+
+        if($pengadaan->save())
+        {
+            return response()->json(['Status' => 'Success', 'Data' => []],200);
+        }
+        else
+        {
+            return response()->json(['Status' => 'Failed','Data' => []],500);
+        }
+    }
+
+    public function confirmDatang($id)
+    {
+        $pengadaan = PengadaanBarang::where('idPengadaanBarang',$id)->first();
+        $rincian = RincianPengadaan::where('idPengadaanBarang',$id)->get();
+
+        $i = 0;
+
+        foreach ($rincian as $detail)
+        {
+            $product = ProdukBarang::where('idProduk',$rincian[$i]['idProduk'])->first();
+            $product['jumlahProduk'] += $rincian[$i]['jumlahBeli'];
+
+            $i++;
+        }
+
+        $pengadaan['statusBrgDatang'] = "Sudah Datang";
+
+        if($pengadaan->save() && $product->save())
+        {
+            return response()->json(['Status' => 'Success', 'Data' => []],200);
+        }
+        else
+        {
+            return response()->json(['Status' => 'Failed','Data' => []],500);
+        }
+
+    }
+
+    public function confirmCetak($id)
+    {
+        $pengadaan = PengadaanBarang::where('idPengadaanBarang',$id)->first();
+        $pengadaan['statusCetak'] = "Sudah Cetak";
 
         if($pengadaan->save())
         {

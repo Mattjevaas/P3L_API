@@ -67,8 +67,13 @@ class RincianPengadaanController extends Controller
     public function delete_specify(Request $request, $id=null)
     {
         $result = RincianPengadaan::where('idRincianPengadaan',$id)->first();
+        $pengadaan = PengadaanBarang::where('idPengadaanBarang',$result->idPengadaanBarang)->first();
+        $produk = ProdukBarang::where('idProduk',$result->idProduk)->first();
 
-        if($result) 
+        $total = $result->jumlahBeli * $produk->hargaBeli;
+        $pengadaan->total -= $total;
+
+        if($result && $pengadaan->save())
         {
             $result2 = RincianPengadaan::where('idRincianPengadaan',$id)->delete();
 
@@ -92,7 +97,9 @@ class RincianPengadaanController extends Controller
             'idProduk' => 'required',
 
         ]);
-        
+
+        $pengadaan = PengadaanBarang::where('idPengadaanBarang',$request->input('idPengadaanBarang'))->first();
+        $produk = ProdukBarang::where('idProduk',$request->input('idProduk'))->first();
         $rincian = new RincianPengadaan;
         //$password = Crypt::encrypt($request->input('password'));
 
@@ -100,7 +107,45 @@ class RincianPengadaanController extends Controller
         $rincian->idPengadaanBarang = $request->input('idPengadaanBarang');
         $rincian->idProduk = $request->input('idProduk');
 
-        if($rincian->save())
+        $total = $rincian->jumlahBeli * $produk->hargaBeli;
+        $pengadaan->total += $total;
+
+        if($rincian->save() && $pengadaan->save())
+        {
+            return response()->json(['Status' => 'Success', 'Data' => []],200);
+        }
+        else
+        {
+            return response()->json(['Status' => 'Failed','Data' => []],500);
+        }
+    }
+
+    public function edit_specify(Request $request,$id)
+    {
+
+        $this->validate($request, [
+            'jumlahBeli' => 'required',
+            'idPengadaanBarang' => 'required',
+            'idProduk' => 'required',
+
+        ]);
+
+        $pengadaan = PengadaanBarang::where('idPengadaanBarang',$request->input('idPengadaanBarang'))->first();
+        $produk = ProdukBarang::where('idProduk',$request->input('idProduk'))->first();
+        $rincian = RincianPengadaan::where('idRincianPengadaan',$id)->first();
+        //$password = Crypt::encrypt($request->input('password'));
+
+        $total = $rincian->jumlahBeli * $produk->hargaBeli;
+        $pengadaan->total -= $total;
+
+        $rincian->jumlahBeli = $request->input('jumlahBeli');
+        $rincian->idPengadaanBarang = $request->input('idPengadaanBarang');
+        $rincian->idProduk = $request->input('idProduk');
+
+        $total = $rincian->jumlahBeli * $produk->hargaBeli;
+        $pengadaan->total += $total;
+
+        if($rincian->save() && $pengadaan->save())
         {
             return response()->json(['Status' => 'Success', 'Data' => []],200);
         }

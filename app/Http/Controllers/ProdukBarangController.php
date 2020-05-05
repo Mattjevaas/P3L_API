@@ -10,10 +10,10 @@ use App\Pegawai;
 
 class ProdukBarangController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     public function fetch_all(Request $request)
     {
