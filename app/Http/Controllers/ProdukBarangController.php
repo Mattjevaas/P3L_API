@@ -88,6 +88,9 @@ class ProdukBarangController extends Controller
         $barang->hargaBeli = $request->input('hargaBeli');
         $barang->stokMinimal = $request->input('stokMinimal');
 
+        $user = Auth::user();
+        $barang->edited_by = 1;        ;
+
         //uploads process
         $picName = $request->file('productPic')->getClientOriginalName();
         $basePath = getcwd();
@@ -95,8 +98,51 @@ class ProdukBarangController extends Controller
         $barang->linkGambar = $picName;
 
         //ini perlu diubah
+
+
+        if($barang->save() && $request->file('productPic')->move(storage_path($destinationPath),$picName))
+        {
+            return response()->json(['Status' => 'Success', 'Data' => []] ,200);
+        }
+        else
+        {
+            return response()->json(['Status' => 'Failed','Data' => []],500);
+        }
+    }
+
+    public function store(Request $request,$id)
+    {
+
+        $this->validate($request, [
+            'namaProduk' => 'required|string',
+            'satuan' => 'required|string',
+            'jumlahProduk' => 'required',
+            'hargaJual' => 'required',
+            'hargaBeli' => 'required',
+            'stokMinimal' => 'required',
+            'productPic' => 'required|mimes:jpeg,jpg,png'
+        ]);
+
+        $barang = new ProdukBarang;
+        //$password = Crypt::encrypt($request->input('password'));
+
+        $barang->namaProduk = $request->input('namaProduk');
+        $barang->satuan = $request->input('satuan');
+        $barang->jumlahProduk = $request->input('jumlahProduk');
+        $barang->hargaJual = $request->input('hargaJual');
+        $barang->hargaBeli = $request->input('hargaBeli');
+        $barang->stokMinimal = $request->input('stokMinimal');
+
         $user = Auth::user();
         $barang->edited_by = $user['idPegawai'];
+
+        //uploads process
+        $picName = $request->file('productPic')->getClientOriginalName();
+        $basePath = getcwd();
+        $destinationPath = 'app';
+        $barang->linkGambar = $picName;
+
+        //ini perlu diubah
 
         if($barang->save() && $request->file('productPic')->move(storage_path($destinationPath),$picName))
         {

@@ -105,3 +105,20 @@ $router->group(['prefix' => 'rincianpengadaan'], function() use ($router) {
     $router->delete('/{id}','RincianPengadaanController@delete_specify');
     $router->post('/edit/{id}','RincianPengadaanController@edit_specify');
 });
+
+$router->group(['prefix' => 'transaksipembayaran'], function() use ($router) {
+    $router->get('/','TransaksiPembayaranController@fetch_all');
+    $router->post('/store','TransaksiPembayaranController@store');
+    $router->post('/edit/{id}','TransaksiPembayaranController@edit_specify');
+    $router->delete('/{id}','TransaksiPembayaranController@delete_specify');
+    $router->post('/selesai/{id}','TransaksiPembayaranController@confirmSelesai');
+
+});
+
+$router->group(['prefix' => 'rincianpembelian'], function() use ($router) {
+    //$router->get('/','RincianPembelianController@fetch_all');
+    $router->post('/store','RincianPembelianController@store');
+    $router->post('/edit/{id}','RincianPembelianController@edit_specify');
+    $router->delete('/{id}','RincianPembelianController@delete_specify');
+});
+
