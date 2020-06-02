@@ -97,7 +97,7 @@ $router->group(['prefix' => 'pengadaanbarang'], function() use ($router) {
     $router->post('/cetak/{id}','PengadaanBarangController@confirmCetak');
     $router->post('/datang/{id}','PengadaanBarangController@confirmDatang');
     $router->post('/laporanTahunan','PengadaanBarangController@simpanSuratTahun');
-
+    $router->get('/cekpdf/{id}','PengadaanBarangController@suratPemesanan');
 });
 
 $router->group(['prefix' => 'rincianpengadaan'], function() use ($router) {

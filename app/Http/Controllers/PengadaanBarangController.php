@@ -209,37 +209,42 @@ class PengadaanBarangController extends Controller
         }
     }
 
-    public function simpanSurat($id)
+    public function suratPemesanan($id)
     {
         $results = PengadaanBarang::where('idPengadaanBarang',$id)->first();
 
         $i = 0;
-        foreach ($results as $data)
+        $supplier = Supplier::where('idSupplier',$results['idSupplier'])->first();
+        $product = RincianPengadaan::where('idPengadaanBarang',$results['idPengadaanBarang'])->get();
+
+        if($supplier)
         {
+            $results['idSupplier'] =  $supplier;
+        }
+        if($product)
+        {
+            $z=0;
 
-            $product = RincianPengadaan::where('idPengadaanBarang',$results[$i]['idPengadaanBarang'])->get();
-
-            if($product)
+            foreach ($product as $data2)
             {
-                $z=0;
+                $barang = ProdukBarang::where('idProduk',$product[$z]['idProduk'])->first();
 
-                foreach ($product as $data2)
+                if($barang)
                 {
-                    $barang = ProdukBarang::where('idProduk',$product[$z]['idProduk'])->first();
-
-                    if($barang)
-                    {
-                        $product[$z]['idProduk'] = $barang;
-                    }
-
-                    $z++;
+                    $product[$z]['idProduk'] = $barang;
                 }
 
-                $results[$i]->listProduct = $product;
+                $z++;
             }
 
-            $i++;
+            $results->listProduct = $product;
         }
+
+        //return response()->json(['Status' => 'Success','Data' => $results],200);
+        $pdf = \App::make('dompdf.wrapper');
+        $view = view('suratPemesanan',['obj'=>$results]);
+        $pdf->loadHTML($view);
+        return $pdf->stream();
     }
 
     public function simpanSuratTahun(Request $request)
