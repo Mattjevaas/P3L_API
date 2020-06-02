@@ -24,6 +24,7 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->withFacades();
+class_alias('Illuminate\Support\Facades\App', 'App');
 
 $app->withEloquent();
 
@@ -60,6 +61,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('dompdf');
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +98,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
+$app->register(\Barryvdh\DomPDF\ServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -106,6 +109,7 @@ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 | can respond to, as well as the controllers that may handle them.
 |
 */
+
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

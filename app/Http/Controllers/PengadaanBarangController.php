@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use DateTime;
 
 use App\PengadaanBarang;
 use App\Supplier;
@@ -205,5 +207,107 @@ class PengadaanBarangController extends Controller
         {
             return response()->json(['Status' => 'Failed','Data' => []],500);
         }
+    }
+
+    public function simpanSurat($id)
+    {
+        $results = PengadaanBarang::where('idPengadaanBarang',$id)->first();
+
+        $i = 0;
+        foreach ($results as $data)
+        {
+
+            $product = RincianPengadaan::where('idPengadaanBarang',$results[$i]['idPengadaanBarang'])->get();
+
+            if($product)
+            {
+                $z=0;
+
+                foreach ($product as $data2)
+                {
+                    $barang = ProdukBarang::where('idProduk',$product[$z]['idProduk'])->first();
+
+                    if($barang)
+                    {
+                        $product[$z]['idProduk'] = $barang;
+                    }
+
+                    $z++;
+                }
+
+                $results[$i]->listProduct = $product;
+            }
+
+            $i++;
+        }
+    }
+
+    public function simpanSuratTahun(Request $request)
+    {
+        $this->validate($request, [
+            'tahun' => 'required|string',
+        ]);
+
+        //$results = PengadaanBarang::where(YEAR('tglPengadaan'),$tahun)->get();
+        $results = DB::table('Pengadaan_barang')->whereRaw("YEAR(tglPengadaan) = '".$request->input('tahun')."'")->get();
+
+        $obj= new \stdClass();
+        $obj->Januari = 0;
+        $obj->Februari = 0;
+        $obj->Maret = 0;
+        $obj->April = 0;
+        $obj->Mei = 0;
+        $obj->Juni = 0;
+        $obj->Juli = 0;
+        $obj->Agustus = 0;
+        $obj->September = 0;
+        $obj->Oktober = 0;
+        $obj->November = 0;
+        $obj->Desember = 0;
+
+        $i = 0;
+        foreach ($results as $data)
+        {
+            $date = DateTime::createFromFormat("Y-n-d", $results[$i]->tglPengadaan);
+            $month = $date->format("n");
+
+            switch($month){
+
+                case 1: $obj->Januari = $obj->Januari + $results[$i]->total;
+                        break;
+                case 2: $obj->Februari = $obj->Februari + $results[$i]->total;
+                        break;
+                case 3: $obj->Maret = $obj->Maret + $results[$i]->total;
+                        break;
+                case 4: $obj->April = $obj->April + $results[$i]->total;
+                        break;
+                case 5: $obj->Mei = $obj->Mei + $results[$i]->total;
+                        break;
+                case 6: $obj->Juni = $obj->Juni + $results[$i]->total;
+                        break;
+                case 7: $obj->Juli = $obj->Juli + $results[$i]->total;
+                        break;
+                case 8: $obj->Agustus = $obj->Agustus + $results[$i]->total;
+                        break;
+                case 9: $obj->September = $obj->September + $results[$i]->total;
+                        break;
+                case 10: $obj->Oktober = $obj->Oktober + $results[$i]->total;
+                        break;
+                case 11: $obj->November = $obj->November + $results[$i]->total;
+                        break;
+                case 12: $obj->Desember = $obj->Desember + $results[$i]->total;
+                        break;
+
+            }
+
+            $i++;
+        }
+
+        $pdf = \App::make('dompdf.wrapper');
+        $view = view('laporan',['obj'=>$obj, 'thn'=>$request->input('tahun')]);
+        $pdf->loadHTML($view);
+        return $pdf->stream();
+
+        //return response()->json(['Status' => 'Success','Data' => $obj],200);
     }
 }

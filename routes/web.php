@@ -96,6 +96,7 @@ $router->group(['prefix' => 'pengadaanbarang'], function() use ($router) {
     $router->delete('/{id}','PengadaanBarangController@delete_specify');
     $router->post('/cetak/{id}','PengadaanBarangController@confirmCetak');
     $router->post('/datang/{id}','PengadaanBarangController@confirmDatang');
+    $router->post('/laporanTahunan','PengadaanBarangController@simpanSuratTahun');
 
 });
 
